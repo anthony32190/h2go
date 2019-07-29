@@ -54,7 +54,7 @@
                     content:'<h1>Water Station @PalacioEstoril</h1>'}];
 
       for(var i = 0; i < markers.length; i++){
-        addMarker(markers[i])
+        addMarker(markers[i]);
       }
 
       function addMarker(props){
@@ -65,7 +65,7 @@
                 scaledSize: new google.maps.Size(48,48)}
         });
 
-        var button = '<button onclick="myFunction()">Get Directions</button>';
+        var button = '<button onclick=getDirections()>Get Directions</button>';
 
         var infoWindow = new google.maps.InfoWindow({
           content:props.content + button
@@ -76,6 +76,10 @@
         });
       }
     }
+
+    function getDirections(marker) {
+
+    };
 
 
 
