@@ -21,12 +21,22 @@
     // failed.", it means you probably did not give permission for the browser to
     // locate you.
     var map, infoWindow;
+    var directionsDisplay, directionsService;
+    var currentPosition;
+
+    /*
+    ##########################################
+    # Main function that initializes the map #
+    ##########################################
+    */
     function initMap() {
       map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: -34.397, lng: 150.644},
         zoom:16
       });
       infoWindow = new google.maps.InfoWindow;
+      directionsDisplay = new google.maps.DirectionsRenderer;
+      directionsService = new google.maps.DirectionsService;
 
       // Try HTML5 geolocation.
       if (navigator.geolocation) {
@@ -40,6 +50,7 @@
           infoWindow.setContent('Location found.');
           infoWindow.open(map);
           map.setCenter(pos);
+          currentPosition = pos;
         }, function() {
           handleLocationError(true, infoWindow, map.getCenter());
         });
@@ -47,6 +58,14 @@
         // Browser doesn't support Geolocation
         handleLocationError(false, infoWindow, map.getCenter());
       }
+
+
+      directionsDisplay.setMap(map);
+
+      var end = {lat:38.70694,lng:-9.39750};
+      var onChangeHandler = function(){
+        calculateAndDisplayRoute(end);
+      };
 
       var markers = [{coords:{lat:38.70694,lng:-9.39750},
                     content:'<h1>Water Station @CasinoEstoril</h1>'},
@@ -57,32 +76,51 @@
         addMarker(markers[i]);
       }
 
-      function addMarker(props){
-        var marker = new google.maps.Marker({
-          position:props.coords,
-          map:map,
-          icon:{url:'http://pluspng.com/img-png/water-droplet-png-hd-water-drop-png-transparent-image-420.png',
-                scaledSize: new google.maps.Size(48,48)}
-        });
-
-        var button = '<button onclick=getDirections()>Get Directions</button>';
-
-        var infoWindow = new google.maps.InfoWindow({
-          content:props.content + button
-        });
-
-        marker.addListener('click', function(){
-          infoWindow.open(map, marker);
-        });
-      }
     }
 
-    function getDirections(marker) {
+    /*
+    ##########################################################
+    # Helper functions used in the main initMap() function   #
+    ##########################################################
+    */
 
-    };
+    function calculateAndDisplayRoute(end) {
+      var start = currentPosition;
 
+      directionsService.route({
+        origin: start,
+        destination: end,
+        travelMode: 'WALKING'
+      }, function(response, status){
+        if (status === 'OK'){
+          directionsDisplay.setDirections(response);
+        } else {
+          window.alert('Directions request failed due to ' + status);
+        }
+      });
+    }
 
+    // Function that adds water drop markers to the map
+    function addMarker(props){
+      var marker = new google.maps.Marker({
+        position:props.coords,
+        map:map,
+        icon:{url:'http://pluspng.com/img-png/water-droplet-png-hd-water-drop-png-transparent-image-420.png',
+              scaledSize: new google.maps.Size(48,48)}
+      });
 
+      var button = '<button onclick=calculateAndDisplayRoute({lat:' + props.coords.lat + ',lng:' + props.coords.lng + '})>Get Directions</button>';
+
+      var infoWindow = new google.maps.InfoWindow({
+        content:props.content + button
+      });
+
+      marker.addListener('click', function(){
+        infoWindow.open(map, marker)
+      });
+    }
+
+    // Function that handles issues with errors
     function handleLocationError(browserHasGeolocation, infoWindow, pos) {
       infoWindow.setPosition(pos);
       infoWindow.setContent(browserHasGeolocation ?
