@@ -1,17 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>H2GO</title>
     <style>
-      /*#map{
-        height:400px;
-        width:100%;
-      }*/
       #map {
         height: 100%;
+        padding-left: 10px;
+        padding-right: 10px;
       }
       /* Optional: Makes the sample page fill the window. */
       html, body {
@@ -23,6 +22,7 @@
         font-family: 'Roboto','sans-serif';
         line-height: 30px;
         padding-left: 10px;
+        padding-right: 10px;
       }
 
       #right-panel select, #right-panel input {
@@ -38,12 +38,7 @@
       }
       #right-panel {
         height: 100%;
-        float: right;
-        width: 390px;
         overflow: auto;
-      }
-      #map {
-        margin-right: 400px;
       }
       @media print {
         #map {
@@ -59,8 +54,8 @@
 </head>
 <body>
   <h1>Refill Station Locator</h1>
-  <div id="right-panel"></div>
   <div id="map"></div>
+  <div id="right-panel"></div>
   <script>
     // Note: This example requires that you consent to location sharing when
     // prompted by your browser. If you see the error "The Geolocation service
@@ -162,10 +157,10 @@
               scaledSize: new google.maps.Size(48,48)}
       });
 
-      var button = '<button onclick=calculateAndDisplayRoute({lat:' + props.coords.lat + ',lng:' + props.coords.lng + '})>Get Directions</button>';
+      var button = '<button onclick=calculateAndDisplayRoute({lat:' + props.coords.lat + ',lng:' + props.coords.lng + '}) class="ui button primary">Get Directions</button>';
 
       var infoWindow = new google.maps.InfoWindow({
-        content:props.content + button
+        content: props.content + button
       });
 
       marker.addListener('click', function(){
