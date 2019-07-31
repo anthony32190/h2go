@@ -6,14 +6,60 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>H2GO</title>
     <style>
-      #map{
+      /*#map{
         height:400px;
         width:100%;
+      }*/
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #right-panel {
+        font-family: 'Roboto','sans-serif';
+        line-height: 30px;
+        padding-left: 10px;
+      }
+
+      #right-panel select, #right-panel input {
+        font-size: 15px;
+      }
+
+      #right-panel select {
+        width: 100%;
+      }
+
+      #right-panel i {
+        font-size: 12px;
+      }
+      #right-panel {
+        height: 100%;
+        float: right;
+        width: 390px;
+        overflow: auto;
+      }
+      #map {
+        margin-right: 400px;
+      }
+      @media print {
+        #map {
+          height: 500px;
+          margin: 0;
+        }
+        #right-panel {
+          float: none;
+          width: auto;
+        }
       }
     </style>
 </head>
 <body>
   <h1>Refill Station Locator</h1>
+  <div id="right-panel"></div>
   <div id="map"></div>
   <script>
     // Note: This example requires that you consent to location sharing when
@@ -46,8 +92,14 @@
             lng: position.coords.longitude
           };
 
-          infoWindow.setPosition(pos);
-          infoWindow.setContent('Location found.');
+          //infoWindow.setPosition(pos);
+          //infoWindow.setContent('Location found.');
+          var marker = new google.maps.Marker({
+            position: pos,
+            map: map,
+            icon: {url:'http://clipartmag.com/images/location-icon-png-41.png',
+                  scaledSize: new google.maps.Size(48,48)}
+          });
           infoWindow.open(map);
           map.setCenter(pos);
           currentPosition = pos;
@@ -61,6 +113,7 @@
 
 
       directionsDisplay.setMap(map);
+      directionsDisplay.setPanel(document.getElementById('right-panel'));
 
       var end = {lat:38.70694,lng:-9.39750};
       var onChangeHandler = function(){
